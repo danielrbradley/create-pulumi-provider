@@ -1,0 +1,32 @@
+{
+  "name": "create-pulumi-provider",
+  "version": "1.0.0",
+  "description": "Bootstrap Pulumi Typescript providers",
+  "main": "dist/index.js",
+  "repository": "https://github.com/pulumi/create-pulumi-provider",
+  "author": "Pulumi",
+  "license": "MIT",
+  "dependencies": {
+    "tar": "^6.1.11",
+    "yaml": "^1.10.2"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "@types/tar": "^6.1.1",
+    "@types/yaml": "^1.9.7",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  },
+  "scripts": {
+    "test": "tsc --noEmit",
+    "build": "tsc",
+    "prepack": "tsc"
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "create-provider-provider": "dist/index.js",
+    "pulumi-provider-scripts": "dist/pulumi-provider-scripts.js"
+  }
+}
