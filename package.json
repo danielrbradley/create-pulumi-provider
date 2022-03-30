@@ -26,7 +26,7 @@
     "dist"
   ],
   "bin": {
-    "create-provider-provider": "dist/index.js",
+    "create-pulumi-provider": "dist/index.js",
     "pulumi-provider-scripts": "dist/pulumi-provider-scripts.js"
   }
 }
