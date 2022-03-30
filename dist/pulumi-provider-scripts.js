@@ -130,9 +130,6 @@ async function build() {
         console.log("Packaged to", path.relative(process.cwd(), gzipPath));
         return gzipPath;
     }
-    catch (e) {
-        throw e;
-    }
     finally {
         if (args.retain) {
             console.log("Retained build directory", tmpDir);
