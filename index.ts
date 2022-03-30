@@ -47,7 +47,7 @@ import * as schema from "./schema.json";
 
 pulumi.provider.main(
   {
-    version: require("package.json").version ?? "0.0.0",
+    version: require("./package.json").version ?? "0.0.0",
 
     create: async (urn, inputs) => {
       const urnParts = urn.split("::").reverse();
