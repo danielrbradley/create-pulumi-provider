@@ -28,5 +28,6 @@
   "bin": {
     "create-pulumi-provider": "dist/index.js",
     "pulumi-provider-scripts": "dist/pulumi-provider-scripts.js"
-  }
+  },
+  "packageManager": "yarn@3.2.0"
 }
