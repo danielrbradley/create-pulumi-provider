@@ -199,5 +199,6 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/node,macos,windows
 
-build
 create-pulumi-provider-*.tgz
+# Temp: commit dist until we publish to npm
+!dist
