@@ -141,8 +141,9 @@ async function build() {
 }
 async function install() {
     const packedPath = await build();
+    const options = discover();
     const pulumiHome = path.resolve(os.homedir(), ".pulumi");
-    const pluginDir = path.join(pulumiHome, "plugins", path.parse(packedPath).name);
+    const pluginDir = path.join(pulumiHome, "plugins", options.name);
     if (!fs.existsSync(pulumiHome)) {
         console.error(pulumiHome, "doesn't exist");
         process.exit(1);
