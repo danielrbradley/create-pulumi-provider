@@ -28,10 +28,9 @@ Options:
 const npmLockFilename = "package-lock.json";
 const yarnLockFilename = "yarn.lock";
 
-const npmArgs = "--production --quiet --progress false";
-const npmInstall = `npm install ${npmArgs}`;
-const npmCi = `npm ci ${npmArgs}`;
-const yarnInstall = "yarn install --production --no-progress --non-interactive";
+const npmInstall = "npm install";
+const npmCi = "npm ci";
+const yarnInstall = "yarn install";
 
 const args = {
   help: argv.includes("--help"),
@@ -79,8 +78,8 @@ async function build() {
   );
   try {
     if (options.typescript) {
-      const tscPath = path.join("node_modules", ".bin", "tsc");
-      const tscCommand = `${tscPath} --noEmit false --outDir ${tmpDir}`;
+      const runner = options.lockFileType == "yarn" ? "yarn" : "npx";
+      const tscCommand = `${runner} tsc --noEmit false --outDir ${tmpDir}`;
       try {
         console.log(child_process.execSync(tscCommand, { encoding: "utf-8" }));
       } catch (err) {
@@ -108,34 +107,22 @@ async function build() {
       "PulumiPlugin.yaml",
       path.join(tmpDir, "PulumiPlugin.yaml")
     );
+    const installOptions = {
+      cwd: tmpDir,
+      encoding: "utf-8",
+      env: {
+        ...process.env,
+        NODE_ENV: "production",
+      },
+    } as const;
     if (options.lockFileType === "yarn") {
       fs.copyFileSync(yarnLockFilename, path.join(tmpDir, yarnLockFilename));
-
-      const output = child_process.execSync(yarnInstall, {
-        cwd: tmpDir,
-        encoding: "utf-8",
-      });
-      console.log(output);
+      console.log(child_process.execSync(yarnInstall, installOptions));
     } else if (options.lockFileType === "npm") {
       fs.copyFileSync(npmLockFilename, path.join(tmpDir, npmLockFilename));
-
-      const output = child_process.execSync(npmCi, {
-        cwd: tmpDir,
-        encoding: "utf-8",
-        env: {
-          NODE_ENV: "production",
-        },
-      });
-      console.log(output);
+      console.log(child_process.execSync(npmCi, installOptions));
     } else if (options.lockFileType === undefined) {
-      const output = child_process.execSync(npmInstall, {
-        cwd: tmpDir,
-        encoding: "utf-8",
-        env: {
-          NODE_ENV: "production",
-        },
-      });
-      console.log(output);
+      console.log(child_process.execSync(npmInstall, installOptions));
     } else {
       throw new Error("Package manager not implemented.");
     }
