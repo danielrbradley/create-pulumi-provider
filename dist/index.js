@@ -123,7 +123,6 @@ ehthumbs_vista.db
             name,
             dependencies: {
                 "@pulumi/pulumi": "^3.27.0",
-                "@supercharge/strings": "^1.25.0",
             },
             devDependencies: {
                 "create-pulumi-provider": "https://github.com/danielrbradley/create-pulumi-provider",
