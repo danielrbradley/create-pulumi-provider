@@ -5,6 +5,7 @@ import * as path from "path";
 import * as child_process from "child_process";
 import * as yaml from "yaml";
 import * as tar from "tar";
+import { generateProviderTypes } from "./generate-provider-types";
 
 const argv = process.argv.slice(2);
 const command = argv[0];
@@ -17,6 +18,7 @@ Commands:
 build        Build the provider package to ./dist
 install      Install the provider locally
 init-actions Create GitHub release action
+generate     Generate provider types from schema
 
 Options:
 --help   Print this help
@@ -70,6 +72,7 @@ function discover() {
 }
 
 async function build() {
+  generateProviderTypes();
   const options = discover();
   const tmpDir = fs.mkdtempSync(
     path.join(os.tmpdir(), "pulumi-provider-build")
@@ -248,6 +251,9 @@ async function initActions() {
 
 (async function run() {
   switch (command) {
+    case "generate":
+      generateProviderTypes();
+      break;
     case "build":
       build();
       break;

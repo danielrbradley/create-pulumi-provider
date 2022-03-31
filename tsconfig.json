@@ -12,4 +12,8 @@
         "resolveJsonModule": true,
         "outDir": "dist"
     },
+    "exclude": [
+        "test-provider",
+        "dist",
+    ]
 }

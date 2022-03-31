@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const readline = require("readline");
 const fs = require("fs");
 const path = require("path");
+const generate_provider_types_1 = require("./generate-provider-types");
 const prompt = readline.createInterface(process.stdin, process.stdout);
 const readme = `
 # An Example Provider in Typescript
@@ -42,27 +43,33 @@ Edit the release notes after the workflow has completed if desired.
 const indexTemplate = `
 import * as pulumi from "@pulumi/pulumi";
 import * as schema from "./schema.json";
+import * as types from "./provider-types";
 
 pulumi.provider.main(
   {
     version: require("./package.json").version ?? "0.0.0",
 
-    create: async (urn, inputs) => {
+    create: async (urn: string, inputs: types.ExampleResourceInputs) => {
       const urnParts = urn.split("::").reverse();
       const id = urnParts[0];
       const type = urnParts[1];
       console.log("Create", { id, type });
-      const outs = { result: inputs.input };
+      const outs: types.ExampleResourceOutputs = { result: inputs.input };
       return { id, outs };
     },
 
-    update: async (id, urn, olds, news) => {
+    update: async (
+      id: string,
+      urn: string,
+      olds: types.ExampleResourceInputs,
+      news: types.ExampleResourceInputs
+    ) => {
       console.log("Update", { id });
       const outs = { result: news.input };
       return { outs };
     },
 
-    delete: async (id, urn, props) => {
+    delete: async (id: string, urn: string, props: any) => {
       console.log("Delete", id);
     },
 
@@ -114,7 +121,10 @@ ehthumbs_vista.db
 `;
 (async function () {
     try {
-        const name = await new Promise((resolve) => prompt.question("Provider name? This will be used for your folder and package name\n> ", resolve));
+        const nameArgIndex = process.argv.indexOf("--name");
+        const name = nameArgIndex > 0
+            ? process.argv[nameArgIndex + 1]
+            : await new Promise((resolve) => prompt.question("Provider name? This will be used for your folder and package name\n> ", resolve));
         if (!name.match(/^[a-z]([a-z]|-)*[a-z]$/)) {
             console.error("Invalid provider name - must be lower case and hyphenated e.g. my-provider");
             process.exit(1);
@@ -196,6 +206,7 @@ ehthumbs_vista.db
         writeString("index.ts", indexTemplate);
         writeString(".gitignore", gitignore);
         writeString("README.md", readme);
+        (0, generate_provider_types_1.generateProviderTypes)({ cwd: name });
         console.log("Done. Read the README.md for next instructions");
     }
     catch (e) {

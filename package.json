@@ -1,6 +1,6 @@
 {
   "name": "create-pulumi-provider",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "description": "Bootstrap Pulumi Typescript providers",
   "main": "dist/index.js",
   "repository": "https://github.com/pulumi/create-pulumi-provider",
@@ -8,19 +8,23 @@
   "license": "MIT",
   "dependencies": {
     "tar": "^6.1.11",
+    "typescript": "^4.6.3",
     "yaml": "^1.10.2"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
     "@types/tar": "^6.1.1",
     "@types/yaml": "^1.9.7",
-    "ts-node": "^10.7.0",
-    "typescript": "^4.6.3"
+    "json-schema-to-typescript": "^10.1.5",
+    "ts-node": "^10.7.0"
   },
   "scripts": {
-    "test": "tsc --noEmit",
-    "build": "tsc",
-    "prepack": "tsc"
+    "clean": "rm -rf dist && rm -rf test-provider",
+    "gen": "wget https://raw.githubusercontent.com/pulumi/pulumi/master/pkg/codegen/schema/pulumi.json -O pulumi-schema.json && json2ts -i pulumi-schema.json -o pulumi-schema.d.ts --unreachableDefinitions --ignoreMinAndMaxItems",
+    "test": "tsc --noEmit && rm -rf test-provider && ts-node index.ts --name test-provider",
+    "build": "rm -rf dist && tsc",
+    "prepack": "rm -rf dist && tsc",
+    "run-script": "ts-node pulumi-provider-scripts.ts"
   },
   "files": [
     "dist"

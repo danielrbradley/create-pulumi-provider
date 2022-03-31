@@ -218,3 +218,4 @@ $RECYCLE.BIN/
 
 # Temp: commit dist until we publish to npm
 !dist
+test-provider

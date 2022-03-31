@@ -7,6 +7,7 @@ const path = require("path");
 const child_process = require("child_process");
 const yaml = require("yaml");
 const tar = require("tar");
+const generate_provider_types_1 = require("./generate-provider-types");
 const argv = process.argv.slice(2);
 const command = argv[0];
 const usage = `Build helpers for NodeJS Pulumi providers
@@ -17,6 +18,7 @@ Commands:
 build        Build the provider package to ./dist
 install      Install the provider locally
 init-actions Create GitHub release action
+generate     Generate provider types from schema
 
 Options:
 --help   Print this help
@@ -63,6 +65,7 @@ function discover() {
     };
 }
 async function build() {
+    (0, generate_provider_types_1.generateProviderTypes)();
     const options = discover();
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pulumi-provider-build"));
     try {
@@ -236,6 +239,9 @@ async function initActions() {
 }
 (async function run() {
     switch (command) {
+        case "generate":
+            (0, generate_provider_types_1.generateProviderTypes)();
+            break;
         case "build":
             build();
             break;
