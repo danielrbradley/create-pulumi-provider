@@ -47,13 +47,12 @@ import * as types from "./provider-types";
 
 pulumi.provider.main(
   {
-    version: require("./package.json").version ?? "0.0.0",
+    version: require("./package.json").version ?? "0.1.0",
 
     create: async (urn: string, inputs: types.ExampleResourceInputs) => {
       const urnParts = urn.split("::").reverse();
       const id = urnParts[0];
       const type = urnParts[1];
-      console.log("Create", { id, type });
       const outs: types.ExampleResourceOutputs = { result: inputs.input };
       return { id, outs };
     },
@@ -64,13 +63,12 @@ pulumi.provider.main(
       olds: types.ExampleResourceInputs,
       news: types.ExampleResourceInputs
     ) => {
-      console.log("Update", { id });
       const outs = { result: news.input };
       return { outs };
     },
 
     delete: async (id: string, urn: string, props: any) => {
-      console.log("Delete", id);
+      // TODO: Implement delete
     },
 
     schema: JSON.stringify(schema),
