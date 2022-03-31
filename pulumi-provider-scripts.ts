@@ -59,10 +59,13 @@ function discover() {
     console.error("Error: name missing in package.json");
     process.exit(1);
   }
+  const packageVersion = packageContent.version;
+  const version = typeof packageVersion === "string" ? packageVersion : "0.0.0";
   return {
     typescript,
     lockFileType,
     name,
+    version,
   } as const;
 }
 
@@ -153,6 +156,7 @@ async function install() {
   const packedPath = await build();
   const options = discover();
   const pulumiHome = path.resolve(os.homedir(), ".pulumi");
+  const pluginName = `provider-${options.name}-v${options.version}`;
   const pluginDir = path.join(pulumiHome, "plugins", options.name);
   if (!fs.existsSync(pulumiHome)) {
     console.error(pulumiHome, "doesn't exist");
