@@ -69,7 +69,11 @@ pulumi.provider.main(
       return { outs };
     },
 
-    delete: async (id: string, urn: string, props: any) => {
+    delete: async (
+      id: string,
+      urn: string,
+      props: types.ExampleResourceOutputs
+    ) => {
       // TODO: Implement delete
     },
 
@@ -144,6 +148,7 @@ ehthumbs_vista.db
         "@pulumi/pulumi": "^3.27.0",
       },
       devDependencies: {
+        "@types/node": "^17.0.23",
         "create-pulumi-provider":
           "https://github.com/danielrbradley/create-pulumi-provider",
         "ts-node": "^10.7.0",

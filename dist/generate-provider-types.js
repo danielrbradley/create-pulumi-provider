@@ -49,7 +49,7 @@ function generateProviderTypes(args) {
         const tokenParts = typeToken.split(":");
         const typeName = tokenParts[2];
         const inputProperties = genTypeProperties(resource.inputProperties, resource.requiredInputs);
-        const inputs = ts.factory.createInterfaceDeclaration(undefined, undefined, typeName + "Inputs", undefined, undefined, inputProperties);
+        const inputs = ts.factory.createInterfaceDeclaration(undefined, [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)], typeName + "Inputs", undefined, undefined, inputProperties);
         const outputProperties = genTypeProperties(resource.properties, resource.required);
         const outputs = ts.factory.createInterfaceDeclaration(undefined, [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)], typeName + "Outputs", undefined, undefined, outputProperties);
         return [inputs, outputs];

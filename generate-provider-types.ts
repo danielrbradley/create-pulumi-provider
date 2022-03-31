@@ -74,7 +74,7 @@ export function generateProviderTypes(args?: { cwd?: string }) {
       );
       const inputs = ts.factory.createInterfaceDeclaration(
         undefined,
-        undefined,
+        [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
         typeName + "Inputs",
         undefined,
         undefined,
