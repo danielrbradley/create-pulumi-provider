@@ -157,7 +157,7 @@ async function install() {
   const options = discover();
   const pulumiHome = path.resolve(os.homedir(), ".pulumi");
   const pluginName = `provider-${options.name}-v${options.version}`;
-  const pluginDir = path.join(pulumiHome, "plugins", options.name);
+  const pluginDir = path.join(pulumiHome, "plugins", pluginName);
   if (!fs.existsSync(pulumiHome)) {
     console.error(pulumiHome, "doesn't exist");
     process.exit(1);
