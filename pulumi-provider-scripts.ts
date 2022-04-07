@@ -236,6 +236,43 @@ async function initActions() {
   console.log("Wrote release workflow to", releasePath);
 }
 
+const pulumi = () =>
+  new Promise<void>((resolve) => {
+    const options = discover();
+    const runner = options.lockFileType == "yarn" ? "yarn" : "npx";
+    let port: number | undefined;
+    const providerPs = child_process.spawn(runner, ["ts-node", "index.ts"]);
+    providerPs.stdout.on("data", (data) => {
+      const stringMessage = data.toString();
+      const numbers = stringMessage.match(/\d+/);
+      if (port === undefined && numbers) {
+        port = Number.parseInt(numbers, 10);
+        const pulumiArgs = argv.slice(1);
+        const pulumiPs = child_process.spawn("pulumi", pulumiArgs, {
+          env: {
+            ...process.env,
+            PULUMI_DEBUG_PROVIDERS: `${options.name}:${port}`,
+          },
+        });
+        pulumiPs.stdout.pipe(process.stdout);
+        pulumiPs.stderr.pipe(process.stderr);
+        process.stdin.pipe(pulumiPs.stdin);
+        pulumiPs.on("exit", () => {
+          if (!providerPs.kill("SIGTERM")) {
+            console.error("Failed to terminate provider");
+          }
+          resolve();
+        });
+      } else {
+        console.log("Provider:", data);
+      }
+    });
+    providerPs.stderr.pipe(process.stderr);
+    providerPs.on("exit", (code) => {
+      console.error("Provider exited with", code);
+    });
+  });
+
 (async function run() {
   switch (command) {
     case "generate":
@@ -246,6 +283,9 @@ async function initActions() {
       break;
     case "install":
       install();
+      break;
+    case "pulumi":
+      await pulumi();
       break;
     case "init-actions":
       initActions();
